@@ -1,5 +1,7 @@
 package com.example.telegramagentapi.config;
 
+import org.keycloak.adapters.KeycloakConfigResolver;
+import org.keycloak.adapters.springboot.KeycloakSpringBootConfigResolver;
 import org.keycloak.adapters.springsecurity.KeycloakSecurityComponents;
 import org.keycloak.adapters.springsecurity.authentication.KeycloakAuthenticationProvider;
 import org.keycloak.adapters.springsecurity.config.KeycloakWebSecurityConfigurerAdapter;
@@ -89,12 +91,13 @@ public class SecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
     @Bean
     public FilterRegistrationBean<?> keycloakSecurityContextRequestFilterBean(
             KeycloakSecurityContextRequestFilter filter) {
-
         FilterRegistrationBean<?> registrationBean = new FilterRegistrationBean<>(filter);
-
         registrationBean.setEnabled(false);
-
         return registrationBean;
+    }
+    @Bean
+    public KeycloakConfigResolver KeycloakConfigResolver() {
+        return new KeycloakSpringBootConfigResolver();
     }
 
     @Bean
