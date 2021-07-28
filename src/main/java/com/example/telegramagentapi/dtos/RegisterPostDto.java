@@ -23,11 +23,13 @@ public class RegisterPostDto {
     @Min(value = 3, message = "Minimum surname length is 3")
     @Max(value = 40, message = "Maximum surname length is 40")
     private String surname;
-
     @NotNull(message = "Field cannot be null")
     @Email
     private String email;
     private String phone;
+    private String agentName;
+    private String companyName;
+    private Long VOEN;
     @NotNull(message = "Field cannot be null")
     @Min(value = 3, message = "Minimum surname length is 3")
     @Max(value = 40, message = "Maximum surname length is 40")

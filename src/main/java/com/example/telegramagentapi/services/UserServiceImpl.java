@@ -26,10 +26,7 @@ import org.springframework.stereotype.Service;
 
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.core.Response;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -63,10 +60,15 @@ public class UserServiceImpl implements UserService {
             user.setEmail(userDTO.getEmail());
             user.setFullName(userDTO.getName() + " " + userDTO.getSurname());
             user.setPhoneNumber(userDTO.getPhone());
-            User crated = userRepository.save(user);
-
+            user.setAgentName(user.getAgentName());
+            user.setCompanyName(userDTO.getCompanyName());
+            user.setVOEN(userDTO.getVOEN());
+            userRepository.save(user);
             ConfirmationToken confirmationToken = new ConfirmationToken(user);
-            emailService.sendMail(user.getEmail(), "Complete Registration!", "To confirm your account, please click here : " + "http://localhost:9191/api/v1/users/confirm-account?token=" + confirmationToken.getConfirmationToken());
+            emailService.sendMail(user.getEmail(), "Complete Registration!",
+                    "To confirm your account, please click here : " +
+                            "http://localhost:9191/api/v1/users/confirm-account?token="
+                            + confirmationToken.getConfirmationToken());
             confirmationTokenRepository.save(confirmationToken);
 
             return new RegisterResponseDto("Please confirm your email!");
@@ -115,6 +117,7 @@ public class UserServiceImpl implements UserService {
                 .resteasyClient(new ResteasyClientBuilder().connectionPoolSize(10).build()).build();
         UserRepresentation user = new UserRepresentation();
         user.setEnabled(true);
+        userDTO.setUsername(userDTO.getEmail());
         user.setUsername(userDTO.getUsername());
         user.setFirstName(userDTO.getName());
         user.setLastName(userDTO.getSurname());
@@ -142,7 +145,7 @@ public class UserServiceImpl implements UserService {
             throw new BadRequestException("Bele user yoxdu");
         }
         UserResource userResource = find(passwordDto.getEmail());
-        UserRepresentation userRepresentation=userResource.toRepresentation();
+        UserRepresentation userRepresentation = userResource.toRepresentation();
         CredentialRepresentation passwordCred = new CredentialRepresentation();
         passwordCred.setTemporary(false);
         passwordCred.setType(CredentialRepresentation.PASSWORD);
@@ -150,8 +153,9 @@ public class UserServiceImpl implements UserService {
         userRepresentation.setCredentials(Arrays.asList(passwordCred));
         userResource.update(userRepresentation);
     }
+
     private UserResource find(String email) {
-        System.out.println(email+"asd");
+        System.out.println(email + "asd");
         Keycloak keycloak = KeycloakBuilder.builder().serverUrl(authServerUrl)
                 .grantType(OAuth2Constants.PASSWORD).realm("master").clientId("telegram-admin")
                 .username("mubu").password("mubu1905")
@@ -163,5 +167,18 @@ public class UserServiceImpl implements UserService {
         return realmResource.users().get(opUserRes.get().getId());
     }
 
-
+//    public void resetPassword(String email) {
+//        UserResource userResource = find(email);
+//        UserRepresentation userRepresentation = userResource.toRepresentation();
+//        User user = userRepository.findUserByUserName(email);
+//        if (user != null) {
+//            ConfirmationToken confirmationToken = new ConfirmationToken(user);
+//            emailService.sendMail(email, "Complete Registration!",
+//                    "To confirm your account, please click here : " +
+//                            "http://localhost:9191/api/v1/users/reset-password?token="
+//                            + confirmationToken.getConfirmationToken());
+//        }
+//
+//
+//    }
 }

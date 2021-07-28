@@ -1,6 +1,7 @@
 package com.example.telegramagentapi.config;
 
 import com.example.telegramagentapi.security.TokenInterceptor;
+import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -37,5 +38,9 @@ public class BaseConfig implements WebMvcConfigurer {
         props.put("mail.debug", "true");
 
         return mailSender;
+    }
+    @Bean
+    public ModelMapper mapper(){
+        return new ModelMapper();
     }
 }
