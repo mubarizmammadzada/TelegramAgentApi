@@ -14,7 +14,7 @@ import java.util.UUID;
 public class RequestDto implements Serializable {
     private String clientId;
     private String chatId;
-    private UUID sessionId;
+    private String sessionId;
     private String lang;
     private Map<String, String> userAnswers = new HashMap<>();
 }

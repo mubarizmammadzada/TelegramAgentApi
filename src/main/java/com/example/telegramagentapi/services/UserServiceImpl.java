@@ -26,6 +26,7 @@ import org.springframework.stereotype.Service;
 
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.core.Response;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -60,9 +61,10 @@ public class UserServiceImpl implements UserService {
             user.setEmail(userDTO.getEmail());
             user.setFullName(userDTO.getName() + " " + userDTO.getSurname());
             user.setPhoneNumber(userDTO.getPhone());
-            user.setAgentName(user.getAgentName());
+            user.setAgentName(userDTO.getAgentName());
             user.setCompanyName(userDTO.getCompanyName());
             user.setVOEN(userDTO.getVOEN());
+            user.setCreatedDate(LocalDateTime.now());
             userRepository.save(user);
             ConfirmationToken confirmationToken = new ConfirmationToken(user);
             emailService.sendMail(user.getEmail(), "Complete Registration!",
