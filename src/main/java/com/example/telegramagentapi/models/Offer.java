@@ -22,4 +22,6 @@ public class Offer {
     @ManyToOne
     @JoinColumn(name = "userId")
     private User user;
+    @OneToOne(mappedBy = "offer", cascade = CascadeType.ALL )
+    private Reply reply;
 }

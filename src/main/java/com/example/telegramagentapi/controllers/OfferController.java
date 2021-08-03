@@ -1,5 +1,6 @@
 package com.example.telegramagentapi.controllers;
 
+import com.example.telegramagentapi.dtos.OfferReplyDto;
 import com.example.telegramagentapi.dtos.ReplyDto;
 import com.example.telegramagentapi.dtos.UserDto;
 import com.example.telegramagentapi.models.Offer;
@@ -27,5 +28,10 @@ public class OfferController {
     @GetMapping("/offers")
     public ResponseEntity<List<ReplyDto>> getAllOffers(@RequestAttribute("user") UserDto userDto) {
         return new ResponseEntity<>(offerService.getOfferByUser(userDto), HttpStatus.OK);
+    }
+
+    @GetMapping("/offer/replied")
+    public ResponseEntity<List<OfferReplyDto>> getAllRepliedOffers(@RequestAttribute("user") UserDto userDto) {
+        return new ResponseEntity<>(offerService.getRepliedOffers(userDto), HttpStatus.OK);
     }
 }

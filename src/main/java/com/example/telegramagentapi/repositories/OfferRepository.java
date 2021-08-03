@@ -10,4 +10,6 @@ import java.util.List;
 public interface OfferRepository extends JpaRepository<Offer, Long> {
     @Query("select s from Offer s where s.user.id=:id")
     List<Offer> findOffersByUser(Long id);
+    @Query("select s from Offer s where s.id=:id")
+    Offer findOfferById(Long id);
 }

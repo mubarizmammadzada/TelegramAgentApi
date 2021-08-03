@@ -1,9 +1,6 @@
 package com.example.telegramagentapi.services;
 
-import com.example.telegramagentapi.dtos.OfferDto;
-import com.example.telegramagentapi.dtos.ReplyDto;
-import com.example.telegramagentapi.dtos.RequestDto;
-import com.example.telegramagentapi.dtos.UserDto;
+import com.example.telegramagentapi.dtos.*;
 import com.example.telegramagentapi.enums.Status;
 import com.example.telegramagentapi.models.*;
 import com.example.telegramagentapi.repositories.*;
@@ -70,9 +67,10 @@ public class OfferServiceImpl implements OfferService {
         userRequest1.setStatus(Status.OFFERED);
         user.getUserRequests().add(userRequest1);
         user.getOffers().add(offer);
-//        request.getUserRequests().add(userRequest1);
-//        userRequestRepository.save(userRequest1);
         userRepository.save(user);
+        List<Offer> offers = offerRepository.findOffersByUser(user.getId());
+        Offer offer1 = offers.stream().filter(s -> s.getSessionId().equals(replyDto.getSessionId())).findAny().get();
+        offerDto.setOfferId(offer1.getId());
         System.out.println("hi");
         File file = generateImage(replyDto, user.getAgentName(), user.getCompanyName());
         offerDto.setImage(file);
@@ -92,6 +90,18 @@ public class OfferServiceImpl implements OfferService {
         return null;
     }
 
+    @Override
+    public List<OfferReplyDto> getRepliedOffers(UserDto userDto) {
+        User user = userRepository.findUserByUserName(userDto.getUsername());
+        if (user != null) {
+            List<Offer> offers = offerRepository.findOffersByUser(user.getId()).stream()
+                    .filter(o -> o.getReply() != null).collect(Collectors.toList());
+            List<OfferReplyDto> offerReplyDtos = mapList(offers, OfferReplyDto.class);
+            return offerReplyDtos;
+        }
+        return null;
+    }
+
     private File generateImage(ReplyDto replyDto, String agentName, String companyName) {
         int width = 250;
         int height = 250;
@@ -105,7 +115,9 @@ public class OfferServiceImpl implements OfferService {
         graphics2D.drawString("Travel Budget " + ":" + replyDto.getBudget(), 10, 50);
         graphics2D.drawString("Travel Date " + ":" + replyDto.getTourDate(), 10, 70);
         graphics2D.drawString("Agent Name " + ":" + agentName, 10, 90);
-        graphics2D.drawString("Agent Name " + ":" + companyName, 10, 110);
+        graphics2D.drawString("Company Name " + ":" + companyName, 10, 110);
+        graphics2D.drawString("Please enter contact information ", 10, 130);
+
         File file = new File("C:\\Users\\Acer\\Desktop\\FirebaseFolder\\salam.png");
         try {
             ImageIO.write(bufferedImage, "png", file);

@@ -1,6 +1,7 @@
 package com.example.telegramagentapi.services;
 
 import com.example.telegramagentapi.dtos.OfferDto;
+import com.example.telegramagentapi.dtos.OfferReplyDto;
 import com.example.telegramagentapi.dtos.ReplyDto;
 import com.example.telegramagentapi.dtos.UserDto;
 import com.example.telegramagentapi.models.Offer;
@@ -11,6 +12,8 @@ public interface OfferService {
     String sendOffer(ReplyDto offerDto, UserDto userDto);
 
     List<ReplyDto> getOfferByUser(UserDto userDto);
+
+    List<OfferReplyDto> getRepliedOffers(UserDto userDto);
 
 
 }

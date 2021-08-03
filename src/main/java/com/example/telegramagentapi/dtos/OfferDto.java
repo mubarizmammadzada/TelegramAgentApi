@@ -15,4 +15,6 @@ public class OfferDto {
     private String agentNumber;
     private File image;
     private String sessionId;
+    private Long offerId;
+    private Integer messageId;
 }
